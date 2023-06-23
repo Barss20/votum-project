@@ -12,7 +12,7 @@ dp = Dispatcher(bot)
 
 
 async def is_admin(user_id):
-    connection = sqlite3.connect('/home/ubuntu/pythonProject1/votum-project/db.sqlite3')
+    connection = sqlite3.connect('/home/ubuntu/pythonProject1/VotumNGO/db.sqlite3')
     cursor = connection.cursor()
     cursor.execute('SELECT user_id FROM AdminTG_telegramadmin')
     results = cursor.fetchall()
@@ -45,7 +45,7 @@ async def process_start_command(message: types.Message):
 
 @dp.callback_query_handler()
 async def call_back_inline(call: types.CallbackQuery):
-    connection = sqlite3.connect('/home/ubuntu/pythonProject1/votum-project/db.sqlite3')
+    connection = sqlite3.connect('/home/ubuntu/pythonProject1/VotumNGO/db.sqlite3')
     cursor = connection.cursor()
     if call.data == 'bgm1':
         await call.message.edit_text(text='Виберіть дію нижче👇', reply_markup=om1)

@@ -25,11 +25,9 @@ SECRET_KEY = 'django-insecure-@0)-6f1&^e^&7q(#9xdadxyw%^=3n8+#xd1pjvu-b@alq#f=iu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    '130.61.186.30'
-]
+SECURE_HSTS_SECONDS = 31536000
 
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+ALLOWED_HOSTS = ['130.61.186.30']
 
 
 # Application definition
@@ -81,9 +79,10 @@ WSGI_APPLICATION = 'VotumNGO.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'VotumNGO/db.sqlite3'),
     }
 }
+
 
 
 # Password validation
@@ -115,6 +114,12 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+SECURE_SSL_REDIRECT = True
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
 
 
 # Static files (CSS, JavaScript, Images)
