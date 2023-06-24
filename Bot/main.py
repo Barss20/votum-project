@@ -2,12 +2,23 @@ import sqlite3
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from buttons import om1, gm1, bgm1
 from config import TOKEN
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
+# Дополнительные импорты
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher.filters import Command
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.dispatcher import FSMContext
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
+storage = MemoryStorage()
+
+class TechnicalWorkStates(StatesGroup):
+    IN_TECHNICAL_WORK = State()
+
 
 
 
@@ -341,9 +352,24 @@ async def process_start_command(message: types.Message):
         admin_url = "http://130.61.186.30/admin"
         await message.answer(text=f"Админка доступна по адресу: \n{admin_url}")
 
+
 @dp.message_handler(commands=['id'])
 async def process_start_command(message: types.Message):
     await message.answer(text=f'{message.from_user.id}', reply_markup=gm1)
 
+
+@dp.message_handler(Command("technical_work"))
+async def start_technical_work(message: types.Message, state: FSMContext):
+    await message.answer("Бот переведен в режим технических работ.")
+    await TechnicalWorkStates.IN_TECHNICAL_WORK.set()
+
+@dp.message_handler(Command("end_technical_work"), state=TechnicalWorkStates.IN_TECHNICAL_WORK)
+async def end_technical_work(message: types.Message, state: FSMContext):
+    await message.answer("Режим технических работ завершен.")
+    await state.finish()
+
+async def on_startup(dp):
+    print("Бот успешно запущен и готов к работе!")
+
 if __name__ == '__main__':
-    executor.start_polling(dp)
+    executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
