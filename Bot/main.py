@@ -327,12 +327,23 @@ async def call_back_inline(call: types.CallbackQuery):
         keyboard = InlineKeyboardMarkup().add(bgm1)
         if await is_admin(call.from_user.id):
 
-            admin_url = 'http://127.0.0.1:8000/admin/'
+            admin_url = 'http://130.61.186.30/admin'
 
             await call.message.edit_text(f"Админка запущена!\nURL: {admin_url}", reply_markup=keyboard)
 
     cursor.close()
     connection.close()
+
+
+@dp.message_handler(commands=['admin'])
+async def process_start_command(message: types.Message):
+    if await is_admin(message.from_user.id):
+        admin_url = "http://130.61.186.30/admin"
+        await message.answer(text=f"Админка доступна по адресу: \n{admin_url}")
+
+@dp.message_handler(commands=['id'])
+async def process_start_command(message: types.Message):
+    await message.answer(text=f'{message.from_user.id}', reply_markup=gm1)
 
 if __name__ == '__main__':
     executor.start_polling(dp)

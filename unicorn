@@ -1,0 +1,21 @@
+working_directory '/home/ubuntu/pythonProject1/VotumNGO'
+
+app_path = File.expand_path('VotumNGO:application', working_directory)
+
+# Настройки для Unicorn
+worker_processes 4
+listen '/path/to/socket', backlog: 64
+
+# Путь к логам
+stderr_path '/path/to/unicorn/error.log'
+stdout_path '/path/to/unicorn/access.log'
+
+# Загрузка WSGI приложения
+preload_app true
+before_fork do |server, worker|
+  defined?(ActiveRecord::Base) && ActiveRecord::Base.connection.disconnect!
+end
+
+after_fork do |server, worker|
+  defined?(ActiveRecord::Base) && ActiveRecord::Base.establish_connection
+end
